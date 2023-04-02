@@ -1,13 +1,23 @@
-OUT_DIR = ./out
-TARGET = main
+SHELL = /bin/sh
 
-${TARGET}::processes.o str.o
-	cc -o ${TARGET} ${OUT_DIR}/processes.o ${OUT_DIR}/str.o main.c
-processes.o::
-	mkdir -p ${OUT_DIR}
-	cc -c processes.c -o ${OUT_DIR}/processes.o
-str.o::
-	mkdir -p ${OUT_DIR}
-	cc -c str.c -o ${OUT_DIR}/str.o
+CC=cc
+srcdir=.
+CFLAGS=-O
+
+# Extra libraries
+LIBS=
+
+OBJS=processes.o str.o main.o
+
+.c.o:
+	${CC} ${CFLAGS} -I${srcdir} -c $<
+
+main: ${OBJS}
+	${CC} ${CFLAGS} -o main ${OBJS} ${LIBS}
+
 clean:
-	rm -rf ${TARGET} ${OUT_DIR}
+	rm -f main ${OBJS}
+
+# Some header file dependencies that really ought to be automatically deduced.
+processes.o: processes.h
+str.o: str.h
